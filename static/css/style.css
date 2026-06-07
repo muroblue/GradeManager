@@ -181,3 +181,36 @@ footer {
   font-size: 0.85rem;
   color: #aaa;
 }
+
+/* ダッシュボード */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.card-title {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.card-value {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #3949ab;
+}
+
+.chart-wrapper {
+  max-width: 480px;
+  margin: 0 auto;
+}

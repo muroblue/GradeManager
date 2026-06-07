@@ -1,3 +1,48 @@
+let gpaChart = null;
+
+// ダッシュボード更新
+async function loadSummary() {
+  const res = await fetch('/api/summary');
+  const data = await res.json();
+
+  // カード更新
+  document.getElementById('gpa-overall').textContent   = data.gpa.overall;
+  document.getElementById('gpa-liberal').textContent   = data.gpa.liberal;
+  document.getElementById('gpa-major').textContent     = data.gpa.major;
+  document.getElementById('earned-overall').textContent  = data.earned.overall;
+  document.getElementById('earned-liberal').textContent  = data.earned.liberal;
+  document.getElementById('earned-major').textContent    = data.earned.major;
+  document.getElementById('earned-required').textContent = data.earned.required;
+  document.getElementById('earned-elective').textContent = data.earned.elective;
+
+  // GPAグラフ
+  const ctx = document.getElementById('gpaChart').getContext('2d');
+  if (gpaChart) gpaChart.destroy();
+  gpaChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['総合GPA', '教養GPA', '専門GPA'],
+      datasets: [{
+        label: 'GPA',
+        data: [data.gpa.overall, data.gpa.liberal, data.gpa.major],
+        backgroundColor: ['#3949ab', '#1e88e5', '#43a047'],
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          min: 0,
+          max: 4,
+          ticks: { stepSize: 1 }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
+}
 let allSubjects = [];
 let editingId = null;
 
@@ -99,6 +144,7 @@ document.getElementById('add-btn').addEventListener('click', async () => {
 
   clearForm();
   loadSubjects();
+  loadSummary();
 });
 
 // 編集開始
@@ -122,6 +168,7 @@ async function deleteSubject(id) {
   if (!confirm('削除しますか？')) return;
   await fetch(`/api/subjects/${id}`, { method: 'DELETE' });
   loadSubjects();
+  loadSummary();
 }
 
 // フォームリセット
@@ -138,3 +185,4 @@ function clearForm() {
 
 // 初回読み込み
 loadSubjects();
+loadSummary();
