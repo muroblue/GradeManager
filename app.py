@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, render_template, request, jsonify
 from gpa_config import GRADE_POINTS, GPA_EXCLUDED, PASSED_GRADES
+from calculator import calc_summary
 
 app = Flask(__name__)
 DB = 'grademanager.db'
@@ -81,5 +82,14 @@ def delete_subject(subject_id):
     conn.close()
     return jsonify({'message': '削除しました'})
 
+from calculator import calc_summary
+
+# 集計API
+@app.route('/api/summary', methods=['GET'])
+def get_summary():
+    conn = get_db()
+    subjects = conn.execute('SELECT * FROM subjects').fetchall()
+    conn.close()
+    return jsonify(calc_summary([dict(s) for s in subjects]))
 if __name__ == '__main__':
     app.run(debug=True)
