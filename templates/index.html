@@ -14,6 +14,54 @@
   </header>
 
   <main>
+    <!-- ダッシュボード -->
+    <section class="dashboard-section">
+      <h2>ダッシュボード</h2>
+      <div class="dashboard-grid">
+
+        <!-- GPA -->
+        <div class="card">
+          <div class="card-title">総合GPA</div>
+          <div class="card-value" id="gpa-overall">-</div>
+        </div>
+        <div class="card">
+          <div class="card-title">教養GPA</div>
+          <div class="card-value" id="gpa-liberal">-</div>
+        </div>
+        <div class="card">
+          <div class="card-title">専門GPA</div>
+          <div class="card-value" id="gpa-major">-</div>
+        </div>
+
+        <!-- 単位数 -->
+        <div class="card">
+          <div class="card-title">取得単位（総合）</div>
+          <div class="card-value" id="earned-overall">-</div>
+        </div>
+        <div class="card">
+          <div class="card-title">取得単位（教養）</div>
+          <div class="card-value" id="earned-liberal">-</div>
+        </div>
+        <div class="card">
+          <div class="card-title">取得単位（専門）</div>
+          <div class="card-value" id="earned-major">-</div>
+        </div>
+        <div class="card">
+          <div class="card-title">取得単位（必修）</div>
+          <div class="card-value" id="earned-required">-</div>
+        </div>
+        <div class="card">
+          <div class="card-title">取得単位（選択）</div>
+          <div class="card-value" id="earned-elective">-</div>
+        </div>
+
+      </div>
+
+      <!-- GPAグラフ -->
+      <div class="chart-wrapper">
+        <canvas id="gpaChart"></canvas>
+      </div>
+    </section>
     <!-- 科目登録フォーム -->
     <section class="form-section">
       <h2>科目を登録</h2>
@@ -98,6 +146,8 @@
     <p>GradeManager &copy; 2025</p>
   </footer>
 
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
