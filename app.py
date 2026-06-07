@@ -91,5 +91,79 @@ def get_summary():
     subjects = conn.execute('SELECT * FROM subjects').fetchall()
     conn.close()
     return jsonify(calc_summary([dict(s) for s in subjects]))
+
+# 卒業要件取得
+@app.route('/api/requirements', methods=['GET'])
+def get_requirements():
+    conn = get_db()
+    req = conn.execute('SELECT * FROM requirements WHERE id = 1').fetchone()
+    conn.close()
+    return jsonify(dict(req))
+
+# 卒業要件更新
+@app.route('/api/requirements', methods=['PUT'])
+def update_requirements():
+    data = request.get_json()
+    conn = get_db()
+    conn.execute('''
+        UPDATE requirements
+        SET total_credits=?, liberal_credits=?, major_credits=?, required_credits=?
+        WHERE id=1
+    ''', (
+        data.get('total_credits', 0),
+        data.get('liberal_credits', 0),
+        data.get('major_credits', 0),
+        data.get('required_credits', 0),
+    ))
+    conn.commit()
+    conn.close()
+    return jsonify({'message': '更新しました'})
+
+# 卒業判定
+@app.route('/api/graduation', methods=['GET'])
+def get_graduation():
+    conn = get_db()
+    subjects = conn.execute('SELECT * FROM subjects').fetchall()
+    req      = conn.execute('SELECT * FROM requirements WHERE id=1').fetchone()
+    conn.close()
+
+    summary = calc_summary([dict(s) for s in subjects])
+    req     = dict(req)
+
+    earned  = summary['earned']
+
+    checks = [
+        {
+            'label':    '総単位数',
+            'required': req['total_credits'],
+            'earned':   earned['overall'],
+        },
+        {
+            'label':    '教養単位数',
+            'required': req['liberal_credits'],
+            'earned':   earned['liberal'],
+        },
+        {
+            'label':    '専門単位数',
+            'required': req['major_credits'],
+            'earned':   earned['major'],
+        },
+        {
+            'label':    '必修単位数',
+            'required': req['required_credits'],
+            'earned':   earned['required'],
+        },
+    ]
+
+    for c in checks:
+        c['shortage'] = max(0, c['required'] - c['earned'])
+        c['passed']   = c['shortage'] == 0
+
+    all_passed = all(c['passed'] for c in checks)
+
+    return jsonify({
+        'eligible': all_passed,
+        'checks':   checks,
+    })
 if __name__ == '__main__':
     app.run(debug=True)

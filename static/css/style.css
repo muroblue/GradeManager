@@ -214,3 +214,61 @@ footer {
   max-width: 480px;
   margin: 0 auto;
 }
+
+/* 卒業判定 */
+.graduation-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.req-form h3 {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.judgment-banner {
+  text-align: center;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.judgment-banner.eligible {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.judgment-banner.not-eligible {
+  background: #fdecea;
+  color: #c62828;
+}
+
+.judgment-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.judgment-table th,
+.judgment-table td {
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.judgment-table th {
+  background: #e8eaf6;
+  color: #3949ab;
+  font-weight: 600;
+}
+
+.check-pass { color: #2e7d32; font-weight: bold; }
+.check-fail { color: #c62828; font-weight: bold; }

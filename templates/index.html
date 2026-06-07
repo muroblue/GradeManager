@@ -62,6 +62,40 @@
         <canvas id="gpaChart"></canvas>
       </div>
     </section>
+
+    <!-- 卒業判定 -->
+    <section class="graduation-section">
+      <h2>卒業判定</h2>
+
+      <!-- 要件設定フォーム -->
+      <div class="req-form">
+        <h3>卒業要件を設定</h3>
+        <div class="form-grid">
+          <input type="number" id="req-total"    placeholder="総単位数" min="0" />
+          <input type="number" id="req-liberal"  placeholder="教養単位数" min="0" />
+          <input type="number" id="req-major"    placeholder="専門単位数" min="0" />
+          <input type="number" id="req-required" placeholder="必修単位数" min="0" />
+          <button id="req-save-btn">保存</button>
+        </div>
+      </div>
+
+      <!-- 判定結果 -->
+      <div class="judgment-result" id="judgment-result">
+        <div class="judgment-banner" id="judgment-banner"></div>
+        <table class="judgment-table" id="judgment-table">
+          <thead>
+            <tr>
+              <th>項目</th>
+              <th>必要単位</th>
+              <th>取得単位</th>
+              <th>不足単位</th>
+              <th>判定</th>
+            </tr>
+          </thead>
+          <tbody id="judgment-tbody"></tbody>
+        </table>
+      </div>
+    </section>
     <!-- 科目登録フォーム -->
     <section class="form-section">
       <h2>科目を登録</h2>
