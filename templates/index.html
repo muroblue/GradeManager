@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GradeManager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <header>
+    <h1>🎓 GradeManager</h1>
+    <p>成績・単位管理システム</p>
+  </header>
+
+  <main>
+    <!-- 科目登録フォーム -->
+    <section class="form-section">
+      <h2>科目を登録</h2>
+      <div class="form-grid">
+        <input type="text" id="name" placeholder="科目名" />
+        <input type="number" id="credits" placeholder="単位数" min="1" max="8" />
+        <select id="category">
+          <option value="">区分</option>
+          <option value="liberal">教養</option>
+          <option value="major">専門</option>
+        </select>
+        <select id="mandatory">
+          <option value="">必修/選択</option>
+          <option value="required">必修</option>
+          <option value="elective">選択</option>
+        </select>
+        <select id="grade">
+          <option value="">成績（未履修）</option>
+          <option value="S">S</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="F">F</option>
+          <option value="R">R</option>
+        </select>
+        <input type="number" id="year" placeholder="年度（例：2024）" />
+        <select id="semester">
+          <option value="">学期</option>
+          <option value="spring">前期</option>
+          <option value="fall">後期</option>
+        </select>
+        <button id="add-btn">登録</button>
+      </div>
+      <p id="error-msg" class="error-msg"></p>
+    </section>
+
+    <!-- 科目一覧 -->
+    <section class="table-section">
+      <h2>科目一覧</h2>
+      <div class="filter-row">
+        <select id="filter-category">
+          <option value="">すべての区分</option>
+          <option value="liberal">教養</option>
+          <option value="major">専門</option>
+        </select>
+        <select id="filter-mandatory">
+          <option value="">必修/選択すべて</option>
+          <option value="required">必修</option>
+          <option value="elective">選択</option>
+        </select>
+        <select id="filter-grade">
+          <option value="">すべての成績</option>
+          <option value="unregistered">未履修</option>
+          <option value="S">S</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="F">F</option>
+          <option value="R">R</option>
+        </select>
+      </div>
+      <table id="subject-table">
+        <thead>
+          <tr>
+            <th>科目名</th>
+            <th>単位</th>
+            <th>区分</th>
+            <th>必修/選択</th>
+            <th>成績</th>
+            <th>年度</th>
+            <th>学期</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody id="subject-tbody"></tbody>
+      </table>
+      <p id="empty-msg" class="empty" style="display:none;">科目が登録されていません</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>GradeManager &copy; 2025</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
