@@ -1,5 +1,60 @@
 let gpaChart = null;
+// 卒業要件を読み込んでフォームに反映
+async function loadRequirements() {
+  const res = await fetch('/api/requirements');
+  const req = await res.json();
+  document.getElementById('req-total').value    = req.total_credits    || '';
+  document.getElementById('req-liberal').value  = req.liberal_credits  || '';
+  document.getElementById('req-major').value    = req.major_credits    || '';
+  document.getElementById('req-required').value = req.required_credits || '';
+}
 
+// 卒業判定を取得して描画
+async function loadGraduation() {
+  const res  = await fetch('/api/graduation');
+  const data = await res.json();
+
+  const banner = document.getElementById('judgment-banner');
+  if (data.eligible) {
+    banner.textContent = '🎓 卒業要件を満たしています';
+    banner.className   = 'judgment-banner eligible';
+  } else {
+    banner.textContent = '⚠️ 卒業要件を満たしていません';
+    banner.className   = 'judgment-banner not-eligible';
+  }
+
+  const tbody = document.getElementById('judgment-tbody');
+  tbody.innerHTML = '';
+  data.checks.forEach(c => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${c.label}</td>
+      <td>${c.required}</td>
+      <td>${c.earned}</td>
+      <td>${c.shortage > 0 ? c.shortage : '-'}</td>
+      <td class="${c.passed ? 'check-pass' : 'check-fail'}">
+        ${c.passed ? '✅ OK' : '❌ 不足'}
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// 卒業要件保存
+document.getElementById('req-save-btn').addEventListener('click', async () => {
+  const body = {
+    total_credits:    parseInt(document.getElementById('req-total').value)    || 0,
+    liberal_credits:  parseInt(document.getElementById('req-liberal').value)  || 0,
+    major_credits:    parseInt(document.getElementById('req-major').value)    || 0,
+    required_credits: parseInt(document.getElementById('req-required').value) || 0,
+  };
+  await fetch('/api/requirements', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  loadGraduation();
+});
 // ダッシュボード更新
 async function loadSummary() {
   const res = await fetch('/api/summary');
@@ -144,7 +199,8 @@ document.getElementById('add-btn').addEventListener('click', async () => {
 
   clearForm();
   loadSubjects();
-  loadSummary();
+loadSummary();
+loadGraduation();
 });
 
 // 編集開始
@@ -168,7 +224,8 @@ async function deleteSubject(id) {
   if (!confirm('削除しますか？')) return;
   await fetch(`/api/subjects/${id}`, { method: 'DELETE' });
   loadSubjects();
-  loadSummary();
+loadSummary();
+loadGraduation();
 }
 
 // フォームリセット
@@ -186,3 +243,5 @@ function clearForm() {
 // 初回読み込み
 loadSubjects();
 loadSummary();
+loadRequirements();
+loadGraduation();
