@@ -272,3 +272,62 @@ footer {
 
 .check-pass { color: #2e7d32; font-weight: bold; }
 .check-fail { color: #c62828; font-weight: bold; }
+
+/* ナビゲーション */
+header nav {
+  margin-top: 12px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+header nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+header nav a:hover {
+  color: white;
+  border-bottom-color: white;
+}
+
+/* シミュレーション */
+.simulate-desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+#simulate-btn {
+  margin-top: 16px;
+  padding: 10px 32px;
+  background: #3949ab;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+#simulate-btn:hover {
+  background: #2c3a8c;
+}
+
+.simulate-result {
+  margin-top: 20px;
+}
+
+.sim-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+/* 未履修ハイライト */
+tr.unregistered td {
+  background: #fffde7;
+}
