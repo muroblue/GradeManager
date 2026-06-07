@@ -1,0 +1,140 @@
+let allSubjects = [];
+let editingId = null;
+
+const CATEGORY_LABEL = { liberal: '教養', major: '専門' };
+const MANDATORY_LABEL = { required: '必修', elective: '選択' };
+const SEMESTER_LABEL = { spring: '前期', fall: '後期' };
+
+// 科目一覧を取得
+async function loadSubjects() {
+  const res = await fetch('/api/subjects');
+  allSubjects = await res.json();
+  applyFilter();
+}
+
+// フィルタ適用して描画
+function applyFilter() {
+  const cat = document.getElementById('filter-category').value;
+  const man = document.getElementById('filter-mandatory').value;
+  const grd = document.getElementById('filter-grade').value;
+
+  const filtered = allSubjects.filter(s => {
+    if (cat && s.category !== cat) return false;
+    if (man && s.mandatory !== man) return false;
+    if (grd === 'unregistered' && s.grade !== null) return false;
+    if (grd && grd !== 'unregistered' && s.grade !== grd) return false;
+    return true;
+  });
+
+  renderTable(filtered);
+}
+
+// テーブル描画
+function renderTable(subjects) {
+  const tbody = document.getElementById('subject-tbody');
+  const emptyMsg = document.getElementById('empty-msg');
+  tbody.innerHTML = '';
+
+  if (subjects.length === 0) {
+    emptyMsg.style.display = 'block';
+    return;
+  }
+  emptyMsg.style.display = 'none';
+
+  subjects.forEach(s => {
+    const gradeClass = s.grade ? `grade-${s.grade}` : 'grade-none';
+    const gradeLabel = s.grade || '未履修';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${s.name}</td>
+      <td>${s.credits}</td>
+      <td>${CATEGORY_LABEL[s.category] || s.category}</td>
+      <td>${MANDATORY_LABEL[s.mandatory] || s.mandatory}</td>
+      <td><span class="grade-badge ${gradeClass}">${gradeLabel}</span></td>
+      <td>${s.year || '-'}</td>
+      <td>${SEMESTER_LABEL[s.semester] || '-'}</td>
+      <td>
+        <button class="edit-btn" onclick="startEdit(${s.id})">編集</button>
+        <button class="delete-btn" onclick="deleteSubject(${s.id})">削除</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// 科目登録・更新
+document.getElementById('add-btn').addEventListener('click', async () => {
+  const name     = document.getElementById('name').value.trim();
+  const credits  = document.getElementById('credits').value;
+  const category = document.getElementById('category').value;
+  const mandatory = document.getElementById('mandatory').value;
+  const grade    = document.getElementById('grade').value;
+  const year     = document.getElementById('year').value;
+  const semester = document.getElementById('semester').value;
+  const errorMsg = document.getElementById('error-msg');
+
+  if (!name || !credits || !category || !mandatory) {
+    errorMsg.textContent = '科目名・単位数・区分・必修/選択は必須です';
+    return;
+  }
+  errorMsg.textContent = '';
+
+  const body = { name, credits: parseInt(credits), category, mandatory, grade, year: parseInt(year) || null, semester };
+
+  if (editingId !== null) {
+    await fetch(`/api/subjects/${editingId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    editingId = null;
+    document.getElementById('add-btn').textContent = '登録';
+  } else {
+    await fetch('/api/subjects', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  }
+
+  clearForm();
+  loadSubjects();
+});
+
+// 編集開始
+function startEdit(id) {
+  const s = allSubjects.find(s => s.id === id);
+  if (!s) return;
+  document.getElementById('name').value     = s.name;
+  document.getElementById('credits').value  = s.credits;
+  document.getElementById('category').value = s.category;
+  document.getElementById('mandatory').value = s.mandatory;
+  document.getElementById('grade').value    = s.grade || '';
+  document.getElementById('year').value     = s.year || '';
+  document.getElementById('semester').value = s.semester || '';
+  document.getElementById('add-btn').textContent = '更新';
+  editingId = id;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// 削除
+async function deleteSubject(id) {
+  if (!confirm('削除しますか？')) return;
+  await fetch(`/api/subjects/${id}`, { method: 'DELETE' });
+  loadSubjects();
+}
+
+// フォームリセット
+function clearForm() {
+  ['name','credits','category','mandatory','grade','year','semester'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+// フィルタ変更時
+['filter-category','filter-mandatory','filter-grade'].forEach(id => {
+  document.getElementById(id).addEventListener('change', applyFilter);
+});
+
+// 初回読み込み
+loadSubjects();
