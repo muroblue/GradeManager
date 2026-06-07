@@ -165,5 +165,28 @@ def get_graduation():
         'eligible': all_passed,
         'checks':   checks,
     })
+
+# GPAシミュレーション
+@app.route('/api/simulate', methods=['POST'])
+def simulate_gpa():
+    data = request.get_json()
+    overrides = data.get('overrides', {})  # {subject_id: grade} の辞書
+
+    conn = get_db()
+    subjects = conn.execute('SELECT * FROM subjects').fetchall()
+    conn.close()
+
+    simulated = []
+    for s in subjects:
+        d = dict(s)
+        if str(d['id']) in overrides:
+            d['grade'] = overrides[str(d['id'])]
+        simulated.append(d)
+
+    summary = calc_summary(simulated)
+    return jsonify({
+        'gpa': summary['gpa'],
+        'earned': summary['earned'],
+    })
 if __name__ == '__main__':
     app.run(debug=True)

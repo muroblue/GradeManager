@@ -11,11 +11,17 @@
   <header>
     <h1>🎓 GradeManager</h1>
     <p>成績・単位管理システム</p>
+    <nav>
+      <a href="#dashboard">ダッシュボード</a>
+      <a href="#graduation">卒業判定</a>
+      <a href="#simulate">シミュレーション</a>
+      <a href="#subjects">科目一覧</a>
+    </nav>
   </header>
 
   <main>
     <!-- ダッシュボード -->
-    <section class="dashboard-section">
+    <section class="dashboard-section" id="dashboard">
       <h2>ダッシュボード</h2>
       <div class="dashboard-grid">
 
@@ -64,7 +70,7 @@
     </section>
 
     <!-- 卒業判定 -->
-    <section class="graduation-section">
+    <section class="graduation-section" id="graduation">
       <h2>卒業判定</h2>
 
       <!-- 要件設定フォーム -->
@@ -96,8 +102,43 @@
         </table>
       </div>
     </section>
+
+    <!-- GPAシミュレーション -->
+    <section class="simulate-section" id="simulate">
+      <h2>GPAシミュレーション</h2>
+      <p class="simulate-desc">未履修科目に仮の成績を設定して、GPAの変化を試算できます。</p>
+      <table class="judgment-table" id="simulate-table">
+        <thead>
+          <tr>
+            <th>科目名</th>
+            <th>単位</th>
+            <th>区分</th>
+            <th>現在の成績</th>
+            <th>仮成績</th>
+          </tr>
+        </thead>
+        <tbody id="simulate-tbody"></tbody>
+      </table>
+      <button id="simulate-btn">試算する</button>
+      <div class="simulate-result" id="simulate-result" style="display:none;">
+        <div class="sim-cards">
+          <div class="card">
+            <div class="card-title">試算後 総合GPA</div>
+            <div class="card-value" id="sim-gpa-overall">-</div>
+          </div>
+          <div class="card">
+            <div class="card-title">試算後 教養GPA</div>
+            <div class="card-value" id="sim-gpa-liberal">-</div>
+          </div>
+          <div class="card">
+            <div class="card-title">試算後 専門GPA</div>
+            <div class="card-value" id="sim-gpa-major">-</div>
+          </div>
+        </div>
+      </div>
+    </section>
     <!-- 科目登録フォーム -->
-    <section class="form-section">
+    <section class="form-section" id="subjects">
       <h2>科目を登録</h2>
       <div class="form-grid">
         <input type="text" id="name" placeholder="科目名" />

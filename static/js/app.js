@@ -1,4 +1,54 @@
 let gpaChart = null;
+// シミュレーションテーブルを描画
+function renderSimulateTable() {
+  const tbody = document.getElementById('simulate-tbody');
+  tbody.innerHTML = '';
+
+  const CATEGORY_LABEL = { liberal: '教養', major: '専門' };
+
+  allSubjects.forEach(s => {
+    const tr = document.createElement('tr');
+    if (!s.grade) tr.classList.add('unregistered');
+    tr.innerHTML = `
+      <td>${s.name}</td>
+      <td>${s.credits}</td>
+      <td>${CATEGORY_LABEL[s.category] || s.category}</td>
+      <td>${s.grade || '未履修'}</td>
+      <td>
+        <select class="sim-grade" data-id="${s.id}">
+          <option value="">変更なし</option>
+          <option value="S">S</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="F">F</option>
+          <option value="R">R</option>
+        </select>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// 試算実行
+document.getElementById('simulate-btn').addEventListener('click', async () => {
+  const overrides = {};
+  document.querySelectorAll('.sim-grade').forEach(sel => {
+    if (sel.value) overrides[sel.dataset.id] = sel.value;
+  });
+
+  const res = await fetch('/api/simulate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ overrides })
+  });
+  const data = await res.json();
+
+  document.getElementById('sim-gpa-overall').textContent = data.gpa.overall;
+  document.getElementById('sim-gpa-liberal').textContent = data.gpa.liberal;
+  document.getElementById('sim-gpa-major').textContent   = data.gpa.major;
+  document.getElementById('simulate-result').style.display = 'block';
+});
 // 卒業要件を読み込んでフォームに反映
 async function loadRequirements() {
   const res = await fetch('/api/requirements');
@@ -110,6 +160,7 @@ async function loadSubjects() {
   const res = await fetch('/api/subjects');
   allSubjects = await res.json();
   applyFilter();
+  renderSimulateTable();
 }
 
 // フィルタ適用して描画
