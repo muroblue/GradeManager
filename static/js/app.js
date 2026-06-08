@@ -93,10 +93,10 @@ async function loadGraduation() {
 // 卒業要件保存
 document.getElementById('req-save-btn').addEventListener('click', async () => {
   const body = {
-    total_credits:    parseInt(document.getElementById('req-total').value)    || 0,
-    liberal_credits:  parseInt(document.getElementById('req-liberal').value)  || 0,
-    major_credits:    parseInt(document.getElementById('req-major').value)    || 0,
-    required_credits: parseInt(document.getElementById('req-required').value) || 0,
+    total_credits:    parseFloat(document.getElementById('req-total').value)    || 0,
+    liberal_credits:  parseFloat(document.getElementById('req-liberal').value)  || 0,
+    major_credits:    parseFloat(document.getElementById('req-major').value)    || 0,
+    required_credits: parseFloat(document.getElementById('req-required').value) || 0,
   };
   await fetch('/api/requirements', {
     method: 'PUT',
@@ -267,7 +267,7 @@ function startEdit(id) {
   document.getElementById('semester').value = s.semester || '';
   document.getElementById('add-btn').textContent = '更新';
   editingId = id;
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.getElementById('subjects').scrollIntoView({ behavior: 'smooth' });
 }
 
 // 削除
