@@ -230,7 +230,7 @@ document.getElementById('add-btn').addEventListener('click', async () => {
   }
   errorMsg.textContent = '';
 
-  const body = { name, credits: parseInt(credits), category, mandatory, grade, year: parseInt(year) || null, semester };
+  const body = { name, credits: parseFloat(credits), category, mandatory, grade, year: parseInt(year) || null, semester };
 
   if (editingId !== null) {
     await fetch(`/api/subjects/${editingId}`, {
