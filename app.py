@@ -56,18 +56,14 @@ def update_subject(subject_id):
     data = request.get_json()
     conn = get_db()
     conn.execute('''
-        UPDATE subjects
-        SET name=?, credits=?, category=?, mandatory=?, grade=?, year=?, semester=?
-        WHERE id=?
+        UPDATE requirements
+        SET total_credits=?, liberal_credits=?, major_credits=?, required_credits=?
+        WHERE id=1
     ''', (
-        data.get('name'),
-        data.get('credits'),
-        data.get('category'),
-        data.get('mandatory'),
-        data.get('grade') or None,
-        data.get('year') or None,
-        data.get('semester') or None,
-        subject_id
+        float(data.get('total_credits', 0)),
+        float(data.get('liberal_credits', 0)),
+        float(data.get('major_credits', 0)),
+        float(data.get('required_credits', 0)),
     ))
     conn.commit()
     conn.close()
