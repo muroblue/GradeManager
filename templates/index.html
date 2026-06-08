@@ -77,10 +77,10 @@
       <div class="req-form">
         <h3>卒業要件を設定</h3>
         <div class="form-grid">
-          <input type="number" id="req-total"    placeholder="総単位数" min="0" />
-          <input type="number" id="req-liberal"  placeholder="教養単位数" min="0" />
-          <input type="number" id="req-major"    placeholder="専門単位数" min="0" />
-          <input type="number" id="req-required" placeholder="必修単位数" min="0" />
+          <input type="number" id="req-total"    placeholder="総単位数" min="0" step="0.5" />
+          <input type="number" id="req-liberal"  placeholder="教養単位数" min="0" step="0.5" />
+          <input type="number" id="req-major"    placeholder="専門単位数" min="0" step="0.5" />
+          <input type="number" id="req-required" placeholder="必修単位数" min="0" step="0.5" />
           <button id="req-save-btn">保存</button>
         </div>
       </div>
@@ -142,7 +142,7 @@
       <h2>科目を登録</h2>
       <div class="form-grid">
         <input type="text" id="name" placeholder="科目名" />
-        <input type="number" id="credits" placeholder="単位数" min="1" max="8" />
+        <input type="number" id="credits" placeholder="単位数" min="0.5" max="8" step="0.5" />
         <select id="category">
           <option value="">区分</option>
           <option value="liberal">教養</option>

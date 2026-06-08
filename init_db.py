@@ -9,7 +9,7 @@ def init_db():
         CREATE TABLE IF NOT EXISTS subjects (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
             name      TEXT    NOT NULL,
-            credits   INTEGER NOT NULL,
+            credits   REAL    NOT NULL,
             category  TEXT    NOT NULL,
             mandatory TEXT    NOT NULL,
             grade     TEXT,
@@ -22,10 +22,10 @@ def init_db():
     c.execute('''
         CREATE TABLE IF NOT EXISTS requirements (
             id               INTEGER PRIMARY KEY,
-            total_credits    INTEGER DEFAULT 0,
-            liberal_credits  INTEGER DEFAULT 0,
-            major_credits    INTEGER DEFAULT 0,
-            required_credits INTEGER DEFAULT 0
+            total_credits    REAL    DEFAULT 0,
+            liberal_credits  REAL    DEFAULT 0,
+            major_credits    REAL    DEFAULT 0,
+            required_credits REAL    DEFAULT 0
         )
     ''')
 
